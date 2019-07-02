@@ -4,17 +4,23 @@ matrix:
     - name: "Python on Linux"
       python: 3.7
       dist: xenial
+      env: ARCH=Darwin-x86_64
     - name: "Python on macOS"
       os: osx
       osx_image: xcode10.2
       language: shell
+      env: ARCH=Linux-x86_64
     - name: "Python  on Windows"
       os: windows
       language: shell
       before_install: choco install python
-      env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
+      env: ARCH=Windows-x86_64 PATH=/c/Python37:/c/Python37/Scripts:$PATH
 install:
   - pip3 install --upgrade pip
   - pip3 install -r requirements.txt
 script:
-  - python3 -m converter
+  - python3 -m converter || true
+before_deploy:
+  - pip3 install -r requirements-build.txt
+  - pyinstaller banking4converter.spec
+  - mv dist/banking4converter dist/banking4converter-$ARCH
