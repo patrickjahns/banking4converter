@@ -16,15 +16,19 @@ matrix:
     before_install: choco install python
     env: ARCH=Windows-x86_64 PATH=/c/Python37:/c/Python37/Scripts:$PATH
 install:
-- pip3 install --upgrade pip
-- pip3 install -r requirements.txt
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      brew update > /dev/null;
+      brew install bash python3 libmagic;
+    fi
+  - pip3 install --upgrade pip
+  - pip3 install -r requirements.txt
 script:
-- python3 -m converter || true
+  - python3 -m converter || true
 before_deploy:
-- pip3 install -r requirements-build.txt
-- pyinstaller banking4converter.spec
-- mv dist/banking4converter dist/banking4converter-$ARCH
-- ls -al dist
+  - pip3 install -r requirements-build.txt
+  - pyinstaller banking4converter.spec
+  - mv dist/banking4converter dist/banking4converter-$ARCH
+  - ls -al dist
 
 deploy:
   provider: releases
