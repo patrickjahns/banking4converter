@@ -18,7 +18,7 @@ matrix:
 install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       brew update > /dev/null;
-      brew install bash python3 libmagic;
+      brew upgrade python;
     fi
   - pip3 install --upgrade pip
   - pip3 install -r requirements.txt
