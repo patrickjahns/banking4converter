@@ -4,12 +4,12 @@ matrix:
   - name: Python on Linux
     python: 3.7
     dist: xenial
-    env: ARCH=Darwin-x86_64
+    env: ARCH=Linux-x86_64
   - name: Python on macOS
     os: osx
     osx_image: xcode10.2
     language: shell
-    env: ARCH=Linux-x86_64
+    env: ARCH=Darwin-x86_64
   - name: Python  on Windows
     os: windows
     language: shell
