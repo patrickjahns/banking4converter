@@ -7,7 +7,7 @@ matrix:
     env: ARCH=Linux-x86_64
   - name: Python on macOS
     os: osx
-    osx_image: xcode10.2
+    osx_image: xcode9.2
     language: shell
     env: ARCH=Darwin-x86_64
   - name: Python  on Windows
