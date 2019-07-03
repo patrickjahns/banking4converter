@@ -20,7 +20,6 @@ install:
       brew update > /dev/null;
       brew upgrade python;
     fi
-  - pip3 install --upgrade pip
   - pip3 install -r requirements.txt
 script:
   - python3 -m converter || true
