@@ -1,0 +1,40 @@
+language: python
+matrix:
+  include:
+  - name: Python on Linux
+    python: 3.7
+    dist: xenial
+    env: ARCH=Linux-x86_64
+  - name: Python on macOS
+    os: osx
+    osx_image: xcode9.2
+    language: shell
+    env: ARCH=Darwin-x86_64
+  - name: Python  on Windows
+    os: windows
+    language: shell
+    before_install: choco install python
+    env: ARCH=Windows-x86_64 PATH=/c/Python37:/c/Python37/Scripts:$PATH
+install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      brew update > /dev/null;
+      brew upgrade python;
+    fi
+  - pip3 install -r requirements.txt
+script:
+  - python3 -m converter || true
+before_deploy:
+  - pip3 install -r requirements-build.txt
+  - pyinstaller banking4converter.spec
+  - mv dist/banking4converter dist/banking4converter-$ARCH
+  - ls -al dist
+
+deploy:
+  provider: releases
+  api_key:
+    secure: fRW9AzkLOeX+hs9/lFHhLUzeO5o7NQEWhGoj5TC10aj9Yvphlargpp7Vns+9nPDLT+dQzMt2w48ixi3vtdAqUyUeoN6d1Eler7fliLfn3SSsG6rvW1lM8CN9T5V22OJmOI+EbsSdUoFLa4vMA6+Y2QMa8LF6qYps5kB6nhRobRLPZt8JhvK/5xIBhUE1iMacwDWjNhHDa3HSl6yhEFd34y71S+vHdytuGv8grnC1K9nhoIWFsd1zZKMN9THrHkmquFAAAfdWUES/2Li/meH28l6NjyVNL8cy7eoGwU1SCZLhc/VGtefWmn0VlVwuOCtBC8tFzvr5UmS3E0iRHeA493xSgvkRnLJ6nauTmdKCOGIV1uQVu7C5y1IFikgOgTtTmbvNAZrDDr2ekncu0PwgVNbrLB/DCtvJ7auo2xaBe2A8IbLYCu8Qq9j3u4rmSk4ylGW13+FS2Z1GpFE5n9g5+tYs2tRA1sMs9XuimtA8SzoQZ8qQtywZjWwVhfGiqxJyzJkubgCXlqnUWhh/Bs3S7YkArOzV09dRE+pqBl7nH88+JV25XcGLgCDkdOoL2cSkZ53RRSQGuYld6rcNlxwG3Q6p1lJhV+vAL/9q2yI4SLD6LW9dmD9p9/OHxSlPr9P+u5DuIK+ilmRvSCzc+pVdBNmyuhi+nSoF003T5iVW2uw=
+  file_glob: true
+  file: dist/*
+  skip_cleanup: true
+  on:
+    tags: true
